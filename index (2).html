@@ -1,0 +1,589 @@
+<title>Sphynx AI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap">
+
+<style>
+/* Layout: full-bleed dark canvas, apex glow source behind hero headline */
+:root {
+  --bg: #000000;
+  --bg-2: #0D0D0D;
+  --border: #1C1C1C;
+  --fg: #FFFFFF;
+  --fg-muted: rgba(255,255,255,0.45);
+  --fg-subtle: rgba(255,255,255,0.2);
+  --cream: #D4C9B4;
+  --cream-dim: rgba(212,201,180,0.6);
+  color-scheme: dark;
+}
+
+/* single-theme: deliberately dark */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── NAV ── */
+nav {
+  position: fixed;
+  top: env(safe-area-inset-top, 0px);
+  left: 0; right: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px max(24px, env(safe-area-inset-left, 0px)) 20px max(24px, env(safe-area-inset-right, 0px));
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+}
+
+.nav-logo svg { width: 28px; height: 28px; }
+
+.nav-wordmark {
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  color: var(--fg);
+  line-height: 1.1;
+}
+
+.nav-wordmark span {
+  display: block;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  color: var(--fg-muted);
+  margin-top: 1px;
+}
+
+.nav-cta {
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  text-decoration: none;
+  border: 1px solid rgba(212,201,180,0.3);
+  padding: 8px 18px;
+  border-radius: 2px;
+  transition: border-color 0.2s, color 0.2s;
+}
+
+.nav-cta:hover {
+  border-color: var(--cream);
+  color: var(--fg);
+}
+
+/* ── HERO ── */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 120px max(40px, env(safe-area-inset-left, 0px)) 80px max(40px, env(safe-area-inset-right, 0px));
+  overflow: hidden;
+}
+
+/* BG ray mark */
+.hero-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 55%;
+  background: radial-gradient(ellipse 60% 45% at 50% -5%, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.03) 45%, transparent 100%);
+  pointer-events: none;
+  user-select: none;
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 780px;
+}
+
+.hero-eyebrow {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 32px;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.1s;
+}
+
+.hero-headline {
+  font-size: clamp(36px, 6vw, 72px);
+  font-weight: 300;
+  line-height: 1.08;
+  letter-spacing: -0.02em;
+  text-wrap: balance;
+  margin-bottom: 32px;
+}
+
+.hero-headline .line {
+  display: block;
+  opacity: 0;
+  transform: translateY(18px);
+}
+
+.hero-headline .line:nth-child(1) { animation: fadeUp 0.7s ease forwards 0.3s; }
+.hero-headline .line:nth-child(2) { animation: fadeUp 0.7s ease forwards 0.5s; }
+.hero-headline .line:nth-child(3) { animation: fadeUp 0.7s ease forwards 0.7s; }
+
+.hero-sub {
+  font-size: clamp(15px, 1.8vw, 18px);
+  font-weight: 300;
+  color: var(--fg-muted);
+  max-width: 520px;
+  line-height: 1.7;
+  margin-bottom: 52px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 1.0s;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  flex-wrap: wrap;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 1.2s;
+}
+
+.btn-primary {
+  display: inline-block;
+  background: var(--fg);
+  color: var(--bg);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  padding: 14px 32px;
+  border-radius: 2px;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover { opacity: 0.88; }
+
+.hero-note {
+  font-size: 12px;
+  color: var(--fg-subtle);
+  letter-spacing: 0.04em;
+}
+
+/* scroll indicator */
+.scroll-hint {
+  position: absolute;
+  bottom: 36px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  opacity: 0;
+  animation: fadeUp 0.7s ease forwards 1.6s;
+}
+
+.scroll-hint-line {
+  width: 1px;
+  height: 40px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.3), transparent);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* ── THE GAP ── */
+.gap-section {
+  padding: 120px max(40px, env(safe-area-inset-left, 0px)) 120px max(40px, env(safe-area-inset-right, 0px));
+  border-top: 1px solid var(--border);
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.gap-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 56px;
+}
+
+.gap-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+}
+
+.gap-item {
+  background: var(--bg);
+  padding: 40px 36px;
+}
+
+.gap-item-num {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  color: var(--cream-dim);
+  margin-bottom: 20px;
+}
+
+.gap-item h3 {
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.3;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.gap-item p {
+  font-size: 14px;
+  color: var(--fg-muted);
+  line-height: 1.7;
+}
+
+/* ── HOW IT WORKS ── */
+.how-section {
+  padding: 120px max(40px, env(safe-area-inset-left, 0px)) 120px max(40px, env(safe-area-inset-right, 0px));
+  background: var(--bg-2);
+}
+
+.how-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.section-label {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--cream);
+  margin-bottom: 16px;
+}
+
+.section-title {
+  font-size: clamp(28px, 4vw, 48px);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  max-width: 480px;
+  margin-bottom: 72px;
+  text-wrap: balance;
+}
+
+.systems-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.system-row {
+  display: grid;
+  grid-template-columns: 48px 1fr auto;
+  align-items: start;
+  gap: 28px;
+  padding: 32px 0;
+  border-bottom: 1px solid var(--border);
+}
+
+.system-row:first-child { border-top: 1px solid var(--border); }
+
+.system-num {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  color: var(--fg-subtle);
+  padding-top: 3px;
+}
+
+.system-body h4 {
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+
+.system-body p {
+  font-size: 13px;
+  color: var(--fg-muted);
+  line-height: 1.65;
+  max-width: 480px;
+}
+
+.system-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--fg-subtle);
+  white-space: nowrap;
+  padding-top: 3px;
+}
+
+/* ── CTA ── */
+.cta-section {
+  position: relative;
+  padding: 160px max(40px, env(safe-area-inset-left, 0px)) 160px max(40px, env(safe-area-inset-right, 0px));
+  text-align: center;
+  overflow: hidden;
+}
+
+.cta-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 55% 50% at 50% 50%, rgba(255,255,255,0.07) 0%, transparent 100%);
+  pointer-events: none;
+}
+
+.cta-inner {
+  position: relative;
+  z-index: 2;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.cta-inner h2 {
+  font-size: clamp(32px, 5vw, 58px);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 20px;
+  text-wrap: balance;
+}
+
+.cta-inner p {
+  font-size: 15px;
+  color: var(--fg-muted);
+  margin-bottom: 48px;
+  line-height: 1.65;
+}
+
+.cta-sub-note {
+  margin-top: 20px;
+  font-size: 12px;
+  color: var(--fg-subtle);
+  letter-spacing: 0.06em;
+}
+
+/* ── FOOTER ── */
+footer {
+  border-top: 1px solid var(--border);
+  padding: 32px max(40px, env(safe-area-inset-left, 0px)) max(32px, env(safe-area-inset-bottom, 0px));
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.footer-logo {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  color: var(--fg-subtle);
+}
+
+.footer-note {
+  font-size: 11px;
+  color: var(--fg-subtle);
+  letter-spacing: 0.04em;
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50%       { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hero-eyebrow, .hero-headline .line, .hero-sub, .hero-actions, .scroll-hint {
+    opacity: 1; transform: none; animation: none;
+  }
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 700px) {
+  .hero { padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); }
+  .gap-grid { grid-template-columns: 1fr; }
+  .system-row { grid-template-columns: 36px 1fr; }
+  .system-tag { display: none; }
+  .gap-section, .how-section, .cta-section {
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+  footer {
+    padding-left: max(24px, env(safe-area-inset-left, 0px));
+    padding-right: max(24px, env(safe-area-inset-right, 0px));
+  }
+}
+</style>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="#">
+    <svg viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <defs>
+        <linearGradient id="nfade" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="white" stop-opacity="1"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
+        <mask id="nmask"><rect width="28" height="32" fill="url(#nfade)"/></mask>
+      </defs>
+      <g mask="url(#nmask)">
+        <line x1="14" y1="0" x2="14"   y2="32" stroke="white" stroke-width="1.8"/>
+        <line x1="14" y1="0" x2="10.4" y2="32" stroke="white" stroke-width="1.15"/>
+        <line x1="14" y1="0" x2="17.6" y2="32" stroke="white" stroke-width="1.15"/>
+        <line x1="14" y1="0" x2="6.2"  y2="32" stroke="white" stroke-width="0.95"/>
+        <line x1="14" y1="0" x2="21.8" y2="32" stroke="white" stroke-width="0.95"/>
+        <line x1="14" y1="0" x2="1.4"  y2="32" stroke="white" stroke-width="0.85"/>
+        <line x1="14" y1="0" x2="26.6" y2="32" stroke="white" stroke-width="0.85"/>
+      </g>
+    </svg>
+    <div class="nav-wordmark">SPHYNX <span>A I</span></div>
+  </a>
+  <a class="nav-cta" href="https://calendly.com/aydenkirichenko/let-s-talk" target="_blank" rel="noopener">Let's talk</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <!-- Apex glow — source without form -->
+  <div class="hero-glow" aria-hidden="true"></div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">Autonomous Revenue Systems</p>
+    <h1 class="hero-headline">
+      <span class="line">Operating beneath</span>
+      <span class="line">the surface of</span>
+      <span class="line">your business.</span>
+    </h1>
+    <p class="hero-sub">We build autonomous systems that capture what slips through, convert what goes cold, and recover what disappears — permanently, invisibly, without adding to your workload.</p>
+    <div class="hero-actions">
+      <a class="btn-primary" href="https://calendly.com/aydenkirichenko/let-s-talk" target="_blank" rel="noopener">20 minutes. No pitch.</a>
+      <span class="hero-note">See what's in the gap →</span>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <div class="scroll-hint-line"></div>
+  </div>
+</section>
+
+<!-- THE GAP -->
+<section class="gap-section">
+  <p class="gap-label">The gap</p>
+  <div class="gap-grid">
+    <div class="gap-item">
+      <div class="gap-item-num">01</div>
+      <h3>The call that wasn't answered</h3>
+      <p>Every missed call is a job offer going to whoever picks up next. Most service businesses lose 30–40% of inbound leads this way — quietly, invisibly, every day.</p>
+    </div>
+    <div class="gap-item">
+      <div class="gap-item-num">02</div>
+      <h3>The lead that went cold</h3>
+      <p>Someone inquired. You got busy. By the time you followed up, they'd moved on. That gap between inquiry and response is where revenue disappears.</p>
+    </div>
+    <div class="gap-item">
+      <div class="gap-item-num">03</div>
+      <h3>The client you forgot you had</h3>
+      <p>Past clients are your highest-converting audience. They already trust you. Most businesses leave them dormant — no reactivation, no outreach, no revenue.</p>
+    </div>
+    <div class="gap-item">
+      <div class="gap-item-num">04</div>
+      <h3>The reputation you didn't build</h3>
+      <p>Google reviews compound. A business with 200 reviews at 4.9★ doesn't need to advertise. Most businesses never ask, and never know what they're leaving on the table.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section">
+  <div class="how-inner">
+    <p class="section-label">How it works</p>
+    <h2 class="section-title">Five systems. One installation. Permanent operation.</h2>
+
+    <div class="systems-list">
+      <div class="system-row">
+        <div class="system-num">01</div>
+        <div class="system-body">
+          <h4>Inbound Capture</h4>
+          <p>An AI voice agent answers every call you miss, 24/7. It takes the inquiry, books the appointment, and texts you the summary. Nothing slips through.</p>
+        </div>
+        <div class="system-tag">Always on</div>
+      </div>
+      <div class="system-row">
+        <div class="system-num">02</div>
+        <div class="system-body">
+          <h4>Lead Follow-Up</h4>
+          <p>Timed multi-channel sequences that reach every new lead at the right moment — without you touching a single message. Warm leads convert. Cold ones disappear. We keep them warm.</p>
+        </div>
+        <div class="system-tag">Automated</div>
+      </div>
+      <div class="system-row">
+        <div class="system-num">03</div>
+        <div class="system-body">
+          <h4>Client Reactivation</h4>
+          <p>We go into your existing client base and bring dormant customers back. Personalized outreach. Real revenue from people who already know and trust you.</p>
+        </div>
+        <div class="system-tag">Revenue recovery</div>
+      </div>
+      <div class="system-row">
+        <div class="system-num">04</div>
+        <div class="system-body">
+          <h4>Reputation Management</h4>
+          <p>Every new Google review is monitored and responded to. Every satisfied client gets a prompt to leave one. Your rating becomes a compounding asset.</p>
+        </div>
+        <div class="system-tag">Compounding</div>
+      </div>
+      <div class="system-row">
+        <div class="system-num">05</div>
+        <div class="system-body">
+          <h4>Monthly Intelligence Report</h4>
+          <p>A clean summary of what the system captured, converted, and recovered that month. Revenue impact, in plain numbers. No dashboards to learn.</p>
+        </div>
+        <div class="system-tag">Monthly</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-glow" aria-hidden="true"></div>
+
+  <div class="cta-inner">
+    <h2>See what's in the gap.</h2>
+    <p>Twenty minutes. We'll look at what your business is currently losing and whether a system like ours would close it.</p>
+    <a class="btn-primary" href="https://calendly.com/aydenkirichenko/let-s-talk" target="_blank" rel="noopener">Book a call</a>
+    <p class="cta-sub-note">No pitch. No commitment. Just the numbers.</p>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">SPHYNX AI</span>
+  <span class="footer-note">sphynxai.co</span>
+</footer>
