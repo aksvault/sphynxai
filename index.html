@@ -494,21 +494,34 @@ footer {
   <a class="nav-logo" href="#">
     <svg viewBox="0 0 28 32" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
       <defs>
-        <linearGradient id="nfade" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id="n-spine" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="white" stop-opacity="1"/>
+          <stop offset="82%" stop-color="white" stop-opacity="0.06"/>
           <stop offset="100%" stop-color="white" stop-opacity="0"/>
         </linearGradient>
-        <mask id="nmask"><rect width="28" height="32" fill="url(#nfade)"/></mask>
+        <linearGradient id="n-near" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="white" stop-opacity="0.92"/>
+          <stop offset="76%" stop-color="white" stop-opacity="0.08"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="n-inner" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="white" stop-opacity="0.88"/>
+          <stop offset="70%" stop-color="white" stop-opacity="0.1"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
+        <linearGradient id="n-edge" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="white" stop-opacity="0.9"/>
+          <stop offset="60%" stop-color="white" stop-opacity="0.12"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
       </defs>
-      <g mask="url(#nmask)">
-        <line x1="14" y1="0" x2="14"   y2="32" stroke="white" stroke-width="1.8"/>
-        <line x1="14" y1="0" x2="10.4" y2="32" stroke="white" stroke-width="1.15"/>
-        <line x1="14" y1="0" x2="17.6" y2="32" stroke="white" stroke-width="1.15"/>
-        <line x1="14" y1="0" x2="6.2"  y2="32" stroke="white" stroke-width="0.95"/>
-        <line x1="14" y1="0" x2="21.8" y2="32" stroke="white" stroke-width="0.95"/>
-        <line x1="14" y1="0" x2="1.4"  y2="32" stroke="white" stroke-width="0.85"/>
-        <line x1="14" y1="0" x2="26.6" y2="32" stroke="white" stroke-width="0.85"/>
-      </g>
+      <line x1="14" y1="1.8" x2="14"   y2="32" stroke="url(#n-spine)" stroke-width="1.8"  stroke-linecap="round"/>
+      <line x1="14" y1="1.8" x2="10.4" y2="32" stroke="url(#n-near)"  stroke-width="1.15" stroke-linecap="round"/>
+      <line x1="14" y1="1.8" x2="17.6" y2="32" stroke="url(#n-near)"  stroke-width="1.15" stroke-linecap="round"/>
+      <line x1="14" y1="1.8" x2="6.2"  y2="32" stroke="url(#n-inner)" stroke-width="0.95" stroke-linecap="round"/>
+      <line x1="14" y1="1.8" x2="21.8" y2="32" stroke="url(#n-inner)" stroke-width="0.95" stroke-linecap="round"/>
+      <line x1="14" y1="1.8" x2="1.4"  y2="32" stroke="url(#n-edge)"  stroke-width="0.85" stroke-linecap="round"/>
+      <line x1="14" y1="1.8" x2="26.6" y2="32" stroke="url(#n-edge)"  stroke-width="0.85" stroke-linecap="round"/>
     </svg>
     <div class="nav-wordmark">SPHYNX <span>A I</span></div>
   </a>
